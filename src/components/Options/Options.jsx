@@ -1,5 +1,8 @@
-export default function Options({name}) {
-    return <button>
-        {name}
-    </button>
+export default function Options({onClickButton, totalFeedback, onReset}) {
+    return <div>
+        <button onClick={() => onClickButton('good')}>Good</button>
+        <button onClick={() => onClickButton('neutral')}>Neutral</button>
+        <button onClick={() => onClickButton('bad')}>Bad</button>
+        {totalFeedback > 0 && (<button onClick={onReset}>Reset</button>)}
+    </div>
 }

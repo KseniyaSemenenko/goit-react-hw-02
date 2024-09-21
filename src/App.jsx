@@ -1,23 +1,48 @@
-import Description from "./components/Description/Description";
-import Options from "./components/Options/Options";
-import Feedback from "./components/Feedback/Feedback";
+import { useState } from 'react';
+
+import Description from './components/Description/Description';
+import Options from './components/Options/Options';
+import Feedback from './components/Feedback/Feedback';
+import Notification from './components/Notification/Notification';
 
 const App = () => {
-  const typeReviews = {
-	good: 0,
-	neutral: 0,
-	bad: 0
-}
-console.log(typeReviews)
-  return <>
-  <Description />
-    <Options name="good"/>
-    <Options name="neutral"/>
-    <Options name="bad"/>
-    <Feedback name="good" value="3"/>
-    <Feedback name="neutral"/>
-    <Feedback name="bad"/>
-  </>
-}
+  const [clicks, setClicks] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  });
 
-export default App
+  const updateFeedback = feedbackType => {
+    setClicks(prevClicks => ({
+      ...prevClicks,
+
+      [feedbackType]: prevClicks[feedbackType] + 1,
+    }));
+  };
+  const clicksReset = () => {
+    setClicks({
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    });
+  };
+  const totalFeedback = clicks.good + clicks.neutral + clicks.bad;
+
+  return (
+    <>
+      <Description />
+      <Options
+        onClickButton={updateFeedback}
+        totalFeedback={totalFeedback}
+        onReset={clicksReset}
+      />
+      {totalFeedback === 0 ? (
+        <Notification />
+      ) : (
+        <Feedback clicksNumber={clicks} />
+      )}
+    </>
+  );
+};
+
+export default App;

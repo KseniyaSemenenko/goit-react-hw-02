@@ -1,5 +1,9 @@
-export default function Feedback({name, value}) {
-    return <>
-        <p>{name}: {value}</p>
-            </>
+export default function Feedback({clicksNumber}) {
+  return (
+    <div>
+          <p>Good: {clicksNumber.good}</p>
+          <p>Neutral: {clicksNumber.neutral}</p>
+          <p>Bad: {clicksNumber.bad}</p>
+    </div>
+  );
 }
