@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Description from './components/Description/Description';
 import Options from './components/Options/Options';
@@ -11,22 +11,33 @@ const App = () => {
     neutral: 0,
     bad: 0,
   });
-
+  useEffect(() => {
+    const savedClicks = JSON.parse(localStorage.getItem('saved-clicks'));
+    if (savedClicks) {
+      setClicks(savedClicks);
+    };
+  }, []);
   const updateFeedback = feedbackType => {
-    setClicks(prevClicks => ({
-      ...prevClicks,
+    setClicks(prevClicks => {
+      const updateClicks = {
+        ...prevClicks,
 
-      [feedbackType]: prevClicks[feedbackType] + 1,
-    }));
-  };
+        [feedbackType]: prevClicks[feedbackType] + 1,
+      };
+      localStorage.setItem('saved-clicks', JSON.stringify(updateClicks));
+      return updateClicks;
+    });
+  }
   const clicksReset = () => {
     setClicks({
       good: 0,
       neutral: 0,
       bad: 0,
     });
+    localStorage.removeItem('saved-clicks')
   };
   const totalFeedback = clicks.good + clicks.neutral + clicks.bad;
+  const positiveFeedback = Math.round((clicks.good / totalFeedback) * 100);
 
   return (
     <>
@@ -39,7 +50,11 @@ const App = () => {
       {totalFeedback === 0 ? (
         <Notification />
       ) : (
-        <Feedback clicksNumber={clicks} />
+        <Feedback
+          clicksNumber={clicks}
+          totalClicks={totalFeedback}
+          positiveClicks={positiveFeedback}
+        />
       )}
     </>
   );
