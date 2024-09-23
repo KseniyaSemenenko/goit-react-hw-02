@@ -11,23 +11,25 @@ const App = () => {
     neutral: 0,
     bad: 0,
   });
+  
   useEffect(() => {
     const savedClicks = JSON.parse(localStorage.getItem('saved-clicks'));
     if (savedClicks) {
       setClicks(savedClicks);
     };
   }, []);
-  const updateFeedback = feedbackType => {
-    setClicks(prevClicks => {
-      const updateClicks = {
-        ...prevClicks,
+  useEffect(() => {
+    localStorage.setItem('saved-clicks', JSON.stringify(clicks));
+  }, [clicks]);
 
-        [feedbackType]: prevClicks[feedbackType] + 1,
-      };
-      localStorage.setItem('saved-clicks', JSON.stringify(updateClicks));
-      return updateClicks;
-    });
-  }
+  const updateFeedback = feedbackType => {
+    setClicks(prevClicks => ({
+      
+      ...prevClicks,
+
+      [feedbackType]: prevClicks[feedbackType] + 1,
+    }));
+       }
   const clicksReset = () => {
     setClicks({
       good: 0,
